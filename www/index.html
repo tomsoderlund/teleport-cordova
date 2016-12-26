@@ -20,47 +20,46 @@
 	</head>
 	<body>
 		<div class="app">
-			<div class="header">
-				<h1>Teleport</h1>
+			<video id="localVideo" muted="muted" autoplay="true"></video>
+
+			<div id="remoteVideosContainer"></div>
+
+			<div class="controls">
 				<div id="deviceready" class="blink">
 					<p class="event listening">Connecting to device</p>
 					<p class="event received">Device is ready</p>
 				</div>
-			</div>
 
-			<div class="localStream" ng-controller="LocalStreamController as localStream">
-				<p>Username: <input ng-model="localStream.name"/></p>
-				<video id="localVideo" muted="muted" autoplay="true"></video>
-				<button ng-click="localStream.toggleCam()">{{ localStream.cameraIsOn ? 'Stop' : 'Start' }}</button>
-				<div ng-show="localStream.cameraIsOn">		
-					<p>Share this link:</p>
-					<a>{{ localStream.link }}</a>
+				<div class="localStream" ng-controller="LocalStreamController as localStream">
+					<p>Username: <input ng-model="localStream.name"/></p>
+					<button ng-click="localStream.toggleCam()">{{ localStream.cameraIsOn ? 'Stop' : 'Start' }}</button>
+					<div ng-show="localStream.cameraIsOn">		
+						<p>Share this link:</p>
+						<a>{{ localStream.link }}</a>
+					</div>
+				</div>
+
+				<div class="remoteStreams" ng-controller="RemoteStreamsController as rtc">
+					<table>
+						<thead>
+							<tr>
+								<th>Stream</th><th>1-way</th><th>2-way</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="stream in rtc.remoteStreams" ng-class="{'selected' : stream.isPlaying}">
+								<td>{{stream.name}}</td>
+								<td ng-click="rtc.view(stream)"><a>View</a></td>
+								<td ng-click="rtc.call(stream)"><a>Call</a></td>
+							</tr>
+						</tbody>
+					</table>
+
+					<button ng-click="rtc.getActiveStreams()">Refresh</button>
+					<div class="remoteStreams"></div>
 				</div>
 			</div>
 
-			<div class="remoteStreams" ng-controller="RemoteStreamsController as rtc">
-				<h2>Remote Streams</h2>
-
-				<div id="remoteVideosContainer"></div>
-
-				<table>
-					<thead>
-						<tr>
-							<th>Stream</th><th>1-way</th><th>2-way</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr ng-repeat="stream in rtc.remoteStreams" ng-class="{'selected' : stream.isPlaying}">
-							<td><a>{{stream.name}}</a></td>
-							<td ng-click="rtc.view(stream)"><a>View</a></td>
-							<td ng-click="rtc.call(stream)"><a>Call</a></td>
-						</tr>
-					</tbody>
-				</table>
-
-				<button ng-click="rtc.loadData()">Refresh</button>
-				<div class="remoteStreams"></div>
-			</div>
 		</div>
 
 		<script type="text/javascript" src="https://projectrtc-tom.herokuapp.com/socket.io/socket.io.js"></script>
