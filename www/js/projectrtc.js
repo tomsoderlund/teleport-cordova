@@ -52,12 +52,14 @@ var ProjectRtcClient = (function() {
 	app.controller('RemoteStreamsController', ['camera', '$location', '$http', function(camera, $location, $http) {
 		var rtc = this;
 		rtc.remoteStreams = [];
+
 		function getStreamById(id) {
 			for (var i=0; i<rtc.remoteStreams.length;i++) {
 				if (rtc.remoteStreams[i].id === id) {return rtc.remoteStreams[i];}
 			}
 		}
-		rtc.loadData = function () {
+
+		rtc.getActiveStreams = function () {
 			// get list of streams from the server
 			$http.get('https://projectrtc-tom.herokuapp.com/streams.json').then(function(results) {
 				// filter own stream
@@ -67,7 +69,7 @@ var ProjectRtcClient = (function() {
 			    // get former state
 			    for (var i=0; i<streams.length;i++) {
 			    	var stream = getStreamById(streams[i].id);
-			    	streams[i].isPlaying = (!!stream) ? stream.isPLaying : false;
+			    	streams[i].isPlaying = (!!stream) ? stream.isPlaying : false;
 			    }
 			    // save new streams
 			    rtc.remoteStreams = streams;
@@ -80,6 +82,7 @@ var ProjectRtcClient = (function() {
 			client.peerInit(stream.id);
 			stream.isPlaying = !stream.isPlaying;
 		};
+
 		rtc.call = function(stream) {
 			/* If json isn't loaded yet, construct a new stream 
 			 * This happens when you load <serverUrl>/<socketId> : 
@@ -115,7 +118,7 @@ var ProjectRtcClient = (function() {
 			};
 
 		//initial load
-		rtc.loadData();
+		rtc.getActiveStreams();
 		if($location.url() != '/') {
 			rtc.call($location.url().slice(1));
 		};

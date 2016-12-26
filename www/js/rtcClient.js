@@ -16,7 +16,7 @@ var PeerManager = (function () {
 	},
 	peerDatabase = {},
 	localStream,
-	remoteVideoContainer = document.getElementById('remoteVideosContainer'),
+	remoteVideosContainer = document.getElementById('remoteVideosContainer'),
 	socket = io('https://projectrtc-tom.herokuapp.com:443/');
 
 	socket.on('message', handleMessage);
