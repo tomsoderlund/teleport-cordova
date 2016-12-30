@@ -24,22 +24,18 @@
 
 			<div id="remoteVideosContainer"></div>
 
-			<div class="controls">
-				<div id="deviceready" class="blink">
-					<p class="event listening">Connecting to device</p>
-					<p class="event received">Device is ready</p>
-				</div>
+			<div class="controls" ng-controller="VideoStreamController as vtc">
 
-				<div class="localStream" ng-controller="LocalStreamController as localStream">
-					<p>Username: <input ng-model="localStream.name"/></p>
-					<button ng-click="localStream.toggleCam()">{{ localStream.cameraIsOn ? 'Stop' : 'Start' }}</button>
-					<div ng-show="localStream.cameraIsOn">		
-						<p>Share this link:</p>
-						<a>{{ localStream.link }}</a>
+				<div class="localStream">
+					<p>Username:<br/><input ng-model="vtc.name"/></p>
+					<button ng-click="vtc.toggleCall()" ng-class="[vtc.getToggleCallReference()]">{{ vtc.getToggleCallLabel() }}</button>
+					<div ng-show="vtc.cameraIsOn">
+						<p>Link:</p>
+						<p><a ng-href="{{ vtc.link }}">{{ vtc.link }}</a></p>
 					</div>
 				</div>
 
-				<div class="remoteStreams" ng-controller="RemoteStreamsController as rtc">
+<!-- 				<div class="remoteStreams">
 					<table>
 						<thead>
 							<tr>
@@ -47,17 +43,18 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr ng-repeat="stream in rtc.remoteStreams" ng-class="{'selected' : stream.isPlaying}">
+							<tr ng-repeat="stream in vtc.remoteStreams" ng-class="{'selected' : stream.isPlaying}">
 								<td>{{stream.name}}</td>
-								<td ng-click="rtc.view(stream)"><a>View</a></td>
-								<td ng-click="rtc.call(stream)"><a>Call</a></td>
+								<td ng-click="vtc.view(stream)"><a>View</a></td>
+								<td ng-click="vtc.call(stream)"><a>Call</a></td>
 							</tr>
 						</tbody>
 					</table>
 
-					<button ng-click="rtc.getActiveStreams()">Refresh</button>
+					<button ng-click="vtc.getActiveStreams()">Refresh</button>
 					<div class="remoteStreams"></div>
-				</div>
+				</div> -->
+
 			</div>
 
 		</div>
